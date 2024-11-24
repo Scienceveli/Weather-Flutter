@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define custom colors for the app -->
+    <color name="splash_background_light">#FFFFFF</color> <!-- Light mode background -->
+    <color name="splash_background_dark">#121212</color>  <!-- Dark mode background -->
+    <color name="primary_color">#6200EE</color>           <!-- Main accent color -->
+    <color name="secondary_color">#03DAC5</color>        <!-- Secondary accent color -->
+
+    <!-- Launch Theme for splash screen -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <!-- Dynamic background for light/dark modes -->
+        <item name="android:windowBackground">
+            @drawable/launch_screen_background
+        </item>
+    </style>
+
+    <!-- Normal Theme for the app -->
+    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <!-- Dynamic window background color -->
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <!-- Set custom primary and secondary colors -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorAccent">@color/secondary_color</item>
+    </style>
+</resources>
