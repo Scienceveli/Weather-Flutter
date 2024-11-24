@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # Flutter MINI-Projects
 
@@ -56,3 +57,6 @@ Start or Run
 
 For support, email bupadhyay277@gmail.com 
 
+=======
+# Brand-O-Flutter
+>>>>>>> 19f36c8ea1f2c43a4aae86d120f5315d5d0fc6fa
