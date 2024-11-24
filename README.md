@@ -29,7 +29,7 @@ Before running the app, ensure that you have the following installed:
 ## 🚀 **Installation**
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/username/weather_app_getx.git
+   git clone https://github.com/Scienceveli/weather_app_getx.git
    ```
 2. **Navigate to the project directory:**
    ```bash
