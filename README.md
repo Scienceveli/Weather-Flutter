@@ -1,6 +1,3 @@
-Here's an improved and organized README for your weather app project, mixing English and Arabic as requested:
-
----
 
 # 🌤 Weather App (GetX)
 
