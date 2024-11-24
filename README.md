@@ -1,7 +1,7 @@
 
 # 🌤 Weather App (GetX)
 
-![Weather App Banner](https://via.placeholder.com/800x200?text=Weather+App+Banner)
+![Weather App Banner](https://github.com/Scienceveli/Weather-Flutter/blob/main/Banner.jpg)
 
 ## 📋 **Project Description**
 The **Weather App** is a simple and fast application that provides accurate weather information for locations around the world. The app uses the **Flutter GetX** library for state management and offers a smooth user interface with support for dark mode.
