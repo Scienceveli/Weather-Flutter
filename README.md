@@ -48,10 +48,10 @@ Before running the app, ensure that you have the following installed:
 
 ## 📱 **Screenshots**
 ### Main Screen:
-![Main Screen](https://via.placeholder.com/400x800?text=Main+Screen)
+![Main Screen](https://github.com/Scienceveli/Weather-Flutter/blob/main/Mainscreen.jpg)
 
 ### Dark Mode:
-![Dark Mode](https://via.placeholder.com/400x800?text=Dark+Mode)
+![Dark Mode](https://github.com/Scienceveli/Weather-Flutter/blob/main/Darkmode.jpg)
 
 ---
 
