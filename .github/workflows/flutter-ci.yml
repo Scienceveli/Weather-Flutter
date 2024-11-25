@@ -32,3 +32,45 @@ jobs:
 
     - name: Verify APK Exists
       run: test -f build/app/outputs/flutter-apk/app-release.apk
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.0.0'  # يمكنك تعديل هذا بناءً على الإصدار الذي تستخدمه
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Run tests
+      run: flutter test
+
+    - name: Build APK (for Android)
+      run: flutter build apk --release
+
+    - name: Build iOS (if needed)
+      run: flutter build ios --release
+      if: runner.os == 'macOS'
+
+    - name: Upload Build Artifact
+      if: success()
+      uses: actions/upload-artifact@v2
+      with:
+        name: flutter-build
+        path: build/
