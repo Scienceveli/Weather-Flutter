@@ -62,12 +62,16 @@ Ensure the following permissions are set in the `AndroidManifest.xml` file:
 - `ACCESS_BACKGROUND_LOCATION` (optional, based on your needs)
 
 ---
-
 ## 🛡 **Technologies Used**
-- **Programming Language:** Dart
-- **Framework:** Flutter
-- **State Management:** GetX
-- **Weather API:** OpenWeatherMap API
+
+- **Programming Language:** 
+  <img src="https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart" />
+- **Framework:** 
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
+- **State Management:** 
+  <img src="https://img.shields.io/badge/GetX-2875A5?style=for-the-badge&logo=getx&logoColor=white" alt="GetX" />
+- **Weather API:** 
+  <img src="https://img.shields.io/badge/OpenWeatherMap-04A6D4?style=for-the-badge&logo=openweathermap&logoColor=white" alt="OpenWeatherMap API" />
 
 ---
 
