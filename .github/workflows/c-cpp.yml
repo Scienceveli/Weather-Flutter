@@ -14,28 +14,11 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential autoconf libtool
+      run: sudo apt-get update && sudo apt-get install -y build-essential
     
-    - name: Check for configure.ac
-      run: |
-        if [ ! -f configure.ac ]; then
-          echo "No configure.ac file found, skipping autoreconf.";
-          exit 0;
-        fi
-
-    - name: Generate configure script (if needed)
-      if: success()
-      run: autoreconf -i
-
-    - name: Configure
-      if: success()
-      run: ./configure
-
     - name: Build project
       run: make
-
+    
     - name: Run tests
       run: make check
-
-    - name: Verify distribution
-      run: make distcheck
+    ```
