@@ -8,23 +8,37 @@ on:
 
 jobs:
   build:
-    name: Build and analyse default scheme using xcodebuild command
+    name: Build and Analyze Default Scheme
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
+      # 1. تنزيل الكود
+      - name: Checkout Repository
         uses: actions/checkout@v4
+
+      # 2. تحديد الـ Scheme الافتراضية
       - name: Set Default Scheme
+        id: set-scheme
         run: |
-          scheme_list=$(xcodebuild -list -json | tr -d "\n")
-          default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo $default | cat >default
-          echo Using default scheme: $default
-      - name: Build
-        env:
-          scheme: ${{ 'default' }}
+          SCHEME=$(xcodebuild -list -json | ruby -e "require 'json'; puts JSON.parse(STDIN.read)['project']['targets'][0]")
+          echo "SCHEME=$SCHEME" >> $GITHUB_ENV
+          echo Using default scheme: $SCHEME
+
+      # 3. بناء وتحليل المشروع
+      - name: Build and Analyze
         run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" | xcpretty && exit ${PIPESTATUS[0]}
+          # تحديد نوع الملف (xcworkspace أو xcodeproj)
+          if [[ -f *.xcworkspace ]]; then
+            FILETYPE="workspace"
+            FILE=$(ls *.xcworkspace)
+          elif [[ -f *.xcodeproj ]]; then
+            FILETYPE="project"
+            FILE=$(ls *.xcodeproj)
+          else
+            echo "No Xcode project or workspace found!" && exit 1
+          fi
+
+          # تشغيل أمر البناء والتحليل
+          xcodebuild clean build analyze \
+            -scheme "$SCHEME" \
+            -"$FILETYPE" "$FILE" | xcpretty
