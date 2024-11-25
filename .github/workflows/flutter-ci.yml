@@ -19,7 +19,7 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'stable'
+        flutter-version: 'stable' # يمكنك استبدال 'stable' بـ '3.13.0' إذا كنت تريد إصدار محدد.
 
     - name: Install Dependencies
       run: flutter pub get
