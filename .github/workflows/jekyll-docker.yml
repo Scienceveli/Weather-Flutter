@@ -1,4 +1,4 @@
-name: Jekyll site CI
+name: Jekyll Site CI
 
 on:
   push:
@@ -12,9 +12,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the site in the jekyll/builder container
+    # 1. تنزيل الكود
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # 2. بناء الموقع باستخدام Docker
+    - name: Build the Jekyll site
       run: |
         docker run \
-        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-        jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
+          -v ${{ github.workspace }}:/srv/jekyll \
+          -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+          jekyll/builder:4.2.0 \
+          /bin/bash -c "jekyll build --future"
+
+    # 3. التحقق من نجاح البناء
+    - name: Verify Build Success
+      run: test -d _site
+
+    # 4. رفع الملفات الناتجة
+    - name: Upload Built Site
+      uses: actions/upload-artifact@v2
+      with:
+        name: jekyll-site
+        path: _site/
