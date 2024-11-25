@@ -29,3 +29,6 @@ jobs:
 
     - name: Build APK
       run: flutter build apk
+
+    - name: Verify APK Exists
+      run: test -f build/app/outputs/flutter-apk/app-release.apk
