@@ -12,15 +12,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y build-essential autoconf libtool
+    
     - name: Generate configure script (if needed)
-      run: autoreconf -i || true
+      run: autoreconf -i
+
     - name: Configure
-      run: ./configure || { echo "Configure failed"; exit 1; }
+      run: ./configure
+      continue-on-error: false  # وقف الـ Workflow في حالة حدوث خطأ
+
     - name: Build project
       run: make
+
     - name: Run tests
-      run: make check || true
+      run: make check
+
     - name: Verify distribution
-      run: make distcheck || true
+      run: make distcheck
