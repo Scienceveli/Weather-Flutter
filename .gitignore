@@ -1,17 +1,31 @@
-# Ignore system files
-NTUSER.DAT*
-OneDrive/
-Tracing/
-Videos/
-Pictures/
+# Ignore Windows system files and folders
+3D Objects/
+Contacts/
 Desktop/
 Documents/
 Downloads/
+Favorites/
+IntelGraphicsProfiles/
+Links/
+Muse Hub/
 Music/
+OneDrive/
+Pictures/
 Saved Games/
+Searches/
+Tracing/
+Videos/
+
+# Ignore system files
+NTUSER.DAT
+NTUSER.DAT{*}.TM.blf
+NTUSER.DAT{*}.TMContainer*
+ntuser.dat.LOG1
+ntuser.dat.LOG2
+ntuser.ini
 
 # Ignore executables
-*.exe
-
-# Ignore hidden system files
-.*/  
+edb_npgsql.exe
+edb_pgjdbc.exe
+edb_psqlodbc.exe
+pemhttpd.exe
