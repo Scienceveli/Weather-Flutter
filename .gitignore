@@ -1,0 +1,17 @@
+# Ignore system files
+NTUSER.DAT*
+OneDrive/
+Tracing/
+Videos/
+Pictures/
+Desktop/
+Documents/
+Downloads/
+Music/
+Saved Games/
+
+# Ignore executables
+*.exe
+
+# Ignore hidden system files
+.*/  
