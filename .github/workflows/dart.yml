@@ -1,33 +1,36 @@
-name: Dart CI
+name: Dart CI with Makefile
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # تشغيل الـ workflow عند دفع التعديلات إلى الفرع الرئيسي
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]  # تشغيل الـ workflow عند فتح pull request إلى الفرع الرئيسي
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # يمكنك تعديل هذا للعمل على منصات أخرى مثل windows-latest أو macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4  # تنزيل الكود من المستودع
 
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: 'stable'
+          sdk: 'stable'  # إعداد Dart SDK
 
       - name: Check Dart version
-        run: dart --version
+        run: dart --version  # التحقق من إصدار Dart
 
       - name: Install dependencies
-        run: dart pub get
+        run: dart pub get  # تثبيت التبعيات عبر pub get
+
+      - name: Run Makefile build
+        run: make  # استخدام Makefile في بناء المشروع (إذا كان لديك Makefile في المشروع)
 
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format --output=none --set-exit-if-changed .  # التحقق من تنسيق الكود
 
       - name: Analyze project source
-        run: dart analyze
+        run: dart analyze  # تحليل الكود
 
       - name: Run tests
-        run: dart test
+        run: dart test  # تشغيل الاختبارات
