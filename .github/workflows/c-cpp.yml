@@ -16,12 +16,20 @@ jobs:
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y build-essential autoconf libtool
     
+    - name: Check for configure.ac
+      run: |
+        if [ ! -f configure.ac ]; then
+          echo "No configure.ac file found, skipping autoreconf.";
+          exit 0;
+        fi
+
     - name: Generate configure script (if needed)
+      if: success()
       run: autoreconf -i
 
     - name: Configure
+      if: success()
       run: ./configure
-      continue-on-error: false  # وقف الـ Workflow في حالة حدوث خطأ
 
     - name: Build project
       run: make
