@@ -1,4 +1,4 @@
-name: Jekyll Site CI with Makefile
+name: Jekyll Site CI with Docker
 
 on:
   push:
@@ -35,12 +35,7 @@ jobs:
     - name: Verify Build Success
       run: test -d _site
 
-    # 5. تشغيل Makefile (إذا كان لديك)
-    - name: Run Makefile build
-      run: make
-      if: success()
-
-    # 6. رفع الملفات الناتجة
+    # 5. رفع الملفات الناتجة
     - name: Upload Built Site
       uses: actions/upload-artifact@v3
       with:
