@@ -1,4 +1,4 @@
-name: Flutter CI/CD
+name: Flutter CI/CD with Makefile
 
 on:
   push:
@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-    # يتم التشغيل على Ubuntu افتراضيًا، وعلى macOS فقط عند بناء iOS.
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -26,37 +25,42 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'stable' # يمكنك تحديد إصدار ثابت مثل '3.13.0'
+        flutter-version: 'stable'
 
-    # 3. تثبيت الاعتماديات
-    - name: Install Dependencies
+    # 3. تثبيت التبعيات عبر Flutter
+    - name: Install Flutter Dependencies
       run: flutter pub get
 
-    # 4. تشغيل الاختبارات
+    # 4. تثبيت التبعيات باستخدام Makefile (إذا كان لديك Makefile في المشروع)
+    - name: Run Makefile build
+      run: make
+      if: success()
+
+    # 5. تشغيل الاختبارات
     - name: Run Tests
       run: flutter test
 
-    # 5. بناء APK للأندرويد
+    # 6. بناء APK للأندرويد (إذا كنت على Ubuntu)
     - name: Build APK
       run: flutter build apk --release
       if: matrix.os == 'ubuntu-latest'
 
-    # 6. التحقق من وجود APK
+    # 7. التحقق من وجود APK
     - name: Verify APK Exists
       run: test -f build/app/outputs/flutter-apk/app-release.apk
       if: matrix.os == 'ubuntu-latest'
 
-    # 7. بناء iOS (في حالة تشغيل على macOS فقط)
+    # 8. بناء iOS (إذا كنت على macOS فقط)
     - name: Build iOS
       run: flutter build ios --release
       if: matrix.os == 'macos-latest'
 
-    # 8. رفع النتائج (Artifacts)
+    # 9. رفع النتائج (Artifacts)
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: flutter-build
         path: |
           build/app/outputs/flutter-apk/app-release.apk
-          build/ios/ipa # يمكنك تعديل المسار إذا كنت تستخدم iOS
+          build/ios/ipa
       if: success()

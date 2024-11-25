@@ -1,47 +1,62 @@
-name: Swift CI
+name: Flutter CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-    name: Build and Test Swift Project
-    runs-on: macos-latest
+    # يتم التشغيل على Ubuntu افتراضيًا، وعلى macOS فقط عند بناء iOS.
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     steps:
-      # 1. تنزيل الكود
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    # 1. تنزيل الكود
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-      # 2. تثبيت إصدار Swift (اختياري إذا كنت تحتاج لإصدار محدد)
-      - name: Set up Swift
-        run: |
-          SWIFT_VERSION="5.8" # عدل الإصدار حسب احتياجات مشروعك
-          if [[ "$(swift --version)" != *"$SWIFT_VERSION"* ]]; then
-            echo "Installing Swift $SWIFT_VERSION..."
-            brew install swiftlint
-          fi
-          swift --version
+    # 2. إعداد Flutter
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable' # يمكنك تحديد إصدار ثابت مثل '3.13.0'
 
-      # 3. بناء المشروع
-      - name: Build Project
-        run: |
-          echo "Building the project..."
-          swift build --configuration release
+    # 3. تثبيت الاعتماديات
+    - name: Install Dependencies
+      run: flutter pub get
 
-      # 4. تشغيل الاختبارات
-      - name: Run Tests
-        run: |
-          echo "Running tests..."
-          swift test --enable-code-coverage
+    # 4. تشغيل الاختبارات
+    - name: Run Tests
+      run: flutter test
 
-      # 5. رفع تقارير التغطية (اختياري)
-      - name: Upload Coverage Report
-        if: success()
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: .build/debug/codecov # عدل المسار حسب مشروعك
+    # 5. بناء APK للأندرويد
+    - name: Build APK
+      run: flutter build apk --release
+      if: matrix.os == 'ubuntu-latest'
+
+    # 6. التحقق من وجود APK
+    - name: Verify APK Exists
+      run: test -f build/app/outputs/flutter-apk/app-release.apk
+      if: matrix.os == 'ubuntu-latest'
+
+    # 7. بناء iOS (في حالة تشغيل على macOS فقط)
+    - name: Build iOS
+      run: flutter build ios --release
+      if: matrix.os == 'macos-latest'
+
+    # 8. رفع النتائج (Artifacts)
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: flutter-build
+        path: |
+          build/app/outputs/flutter-apk/app-release.apk
+          build/ios/ipa # يمكنك تعديل المسار إذا كنت تستخدم iOS
+      if: success()

@@ -1,4 +1,4 @@
-name: Jekyll Site CI
+name: Jekyll Site CI with Makefile
 
 on:
   push:
@@ -16,14 +16,14 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. التأكد من تثبيت Docker (اختياري)
+    # 2. التأكد من تثبيت Docker
     - name: Set up Docker
       run: |
         sudo apt-get update
         sudo apt-get install -y docker.io
 
     # 3. بناء الموقع باستخدام Docker
-    - name: Build the Jekyll site
+    - name: Build the Jekyll site with Docker
       run: |
         docker run \
           -v ${{ github.workspace }}:/srv/jekyll \
@@ -35,7 +35,12 @@ jobs:
     - name: Verify Build Success
       run: test -d _site
 
-    # 5. رفع الملفات الناتجة
+    # 5. تشغيل Makefile (إذا كان لديك)
+    - name: Run Makefile build
+      run: make
+      if: success()
+
+    # 6. رفع الملفات الناتجة
     - name: Upload Built Site
       uses: actions/upload-artifact@v3
       with:

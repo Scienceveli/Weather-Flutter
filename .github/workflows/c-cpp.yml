@@ -2,32 +2,25 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # تشغيل الـ workflow عند دفع التعديلات إلى الفرع الرئيسي
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]  # تشغيل الـ workflow عند فتح pull request إلى الفرع الرئيسي
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # تشغيل البناء على نظام Ubuntu
 
     steps:
-    - uses: actions/checkout@v4
-    
+    - uses: actions/checkout@v4  # تنزيل الكود من المستودع
+
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential autoconf libtool
-    
-    - name: Generate configure script (if needed)
-      run: autoreconf -i
+      run: sudo apt-get update && sudo apt-get install -y build-essential  # تثبيت الأدوات الأساسية مثل المترجم gcc
 
-    - name: Configure
-      run: ./configure
-      continue-on-error: false  # وقف الـ Workflow في حالة حدوث خطأ
-
-    - name: Build project
-      run: make
+    - name: Build project using Makefile
+      run: make  # استخدام make لبناء المشروع بناءً على Makefile الموجود في المجلد الجذر
 
     - name: Run tests
-      run: make check
+      run: make check  # إذا كان لديك خطوة لاختبار المشروع باستخدام make
 
-    - name: Verify distribution
-      run: make distcheck
+    - name: Clean build files
+      run: make clean  # تنظيف الملفات الناتجة بعد كل عملية بناء
