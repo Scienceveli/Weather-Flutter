@@ -1,4 +1,4 @@
-name: Xcode - Build and Analyze
+name: Xcode - Build, Analyze, and Makefile CI/CD
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build and Analyze Default Scheme
-    runs-on: macos-latest
+    runs-on: macos-latest  # سيتم تشغيله على macOS
 
     steps:
       # 1. تنزيل الكود
@@ -24,7 +24,7 @@ jobs:
           echo "SCHEME=$SCHEME" >> $GITHUB_ENV
           echo Using default scheme: $SCHEME
 
-      # 3. بناء وتحليل المشروع
+      # 3. بناء وتحليل المشروع باستخدام Xcode
       - name: Build and Analyze
         run: |
           # تحديد نوع الملف (xcworkspace أو xcodeproj)
@@ -42,3 +42,15 @@ jobs:
           xcodebuild clean build analyze \
             -scheme "$SCHEME" \
             -"$FILETYPE" "$FILE" | xcpretty
+
+      # 4. تشغيل Makefile إذا كان موجودًا (يمكنك تخصيص هذه الخطوة)
+      - name: Run Makefile build
+        run: make
+        if: success()
+
+      # 5. رفع الملفات الناتجة (اختياري)
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: xcode-build-artifacts
+          path: build/  # رفع نتائج البناء مثل الملفات أو التقارير
