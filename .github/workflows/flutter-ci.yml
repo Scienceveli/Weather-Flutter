@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter CI/CD
 
 on:
   push:
@@ -10,67 +10,53 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # يتم التشغيل على Ubuntu افتراضيًا، وعلى macOS فقط عند بناء iOS.
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     steps:
+    # 1. تنزيل الكود
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    # 2. إعداد Flutter
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'stable' # يمكنك استبدال 'stable' بـ '3.13.0' إذا كنت تريد إصدار محدد.
+        flutter-version: 'stable' # يمكنك تحديد إصدار ثابت مثل '3.13.0'
 
+    # 3. تثبيت الاعتماديات
     - name: Install Dependencies
       run: flutter pub get
 
+    # 4. تشغيل الاختبارات
     - name: Run Tests
       run: flutter test
 
+    # 5. بناء APK للأندرويد
     - name: Build APK
-      run: flutter build apk
+      run: flutter build apk --release
+      if: matrix.os == 'ubuntu-latest'
 
+    # 6. التحقق من وجود APK
     - name: Verify APK Exists
       run: test -f build/app/outputs/flutter-apk/app-release.apk
-name: Flutter CI
+      if: matrix.os == 'ubuntu-latest'
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.0.0'  # يمكنك تعديل هذا بناءً على الإصدار الذي تستخدمه
-
-    - name: Install dependencies
-      run: flutter pub get
-
-    - name: Run tests
-      run: flutter test
-
-    - name: Build APK (for Android)
-      run: flutter build apk --release
-
-    - name: Build iOS (if needed)
+    # 7. بناء iOS (في حالة تشغيل على macOS فقط)
+    - name: Build iOS
       run: flutter build ios --release
-      if: runner.os == 'macOS'
+      if: matrix.os == 'macos-latest'
 
-    - name: Upload Build Artifact
-      if: success()
+    # 8. رفع النتائج (Artifacts)
+    - name: Upload Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: flutter-build
-        path: build/
+        path: |
+          build/app/outputs/flutter-apk/app-release.apk
+          build/ios/ipa # يمكنك تعديل المسار إذا كنت تستخدم iOS
+      if: success()
