@@ -16,7 +16,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. بناء الموقع باستخدام Docker
+    # 2. التأكد من تثبيت Docker (اختياري)
+    - name: Set up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+
+    # 3. بناء الموقع باستخدام Docker
     - name: Build the Jekyll site
       run: |
         docker run \
@@ -25,13 +31,13 @@ jobs:
           jekyll/builder:4.2.0 \
           /bin/bash -c "jekyll build --future"
 
-    # 3. التحقق من نجاح البناء
+    # 4. التحقق من نجاح البناء
     - name: Verify Build Success
       run: test -d _site
 
-    # 4. رفع الملفات الناتجة
+    # 5. رفع الملفات الناتجة
     - name: Upload Built Site
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: jekyll-site
         path: _site/
