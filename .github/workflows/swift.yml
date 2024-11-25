@@ -1,7 +1,4 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
-name: Swift
+name: Swift CI
 
 on:
   push:
@@ -11,12 +8,40 @@ on:
 
 jobs:
   build:
-
+    name: Build and Test Swift Project
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+      # 1. تنزيل الكود
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. تثبيت إصدار Swift (اختياري إذا كنت تحتاج لإصدار محدد)
+      - name: Set up Swift
+        run: |
+          SWIFT_VERSION="5.8" # عدل الإصدار حسب احتياجات مشروعك
+          if [[ "$(swift --version)" != *"$SWIFT_VERSION"* ]]; then
+            echo "Installing Swift $SWIFT_VERSION..."
+            brew install swiftlint
+          fi
+          swift --version
+
+      # 3. بناء المشروع
+      - name: Build Project
+        run: |
+          echo "Building the project..."
+          swift build --configuration release
+
+      # 4. تشغيل الاختبارات
+      - name: Run Tests
+        run: |
+          echo "Running tests..."
+          swift test --enable-code-coverage
+
+      # 5. رفع تقارير التغطية (اختياري)
+      - name: Upload Coverage Report
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: .build/debug/codecov # عدل المسار حسب مشروعك
