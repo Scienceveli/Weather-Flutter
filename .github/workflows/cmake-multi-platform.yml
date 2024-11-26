@@ -1,40 +1,14 @@
-name: Build with Makefile on multiple platforms
+# Makefile لبناء مشروع Flutter
 
-on:
-  push:
-    branches: [ "main" ]  # تشغيل الـ workflow عند دفع التعديلات إلى الفرع الرئيسي
-  pull_request:
-    branches: [ "main" ]  # تشغيل الـ workflow عند فتح pull request إلى الفرع الرئيسي
+.PHONY: build clean test
 
-jobs:
-  build:
-    runs-on: ${{ matrix.os }}  # تشغيل الـ job على منصات متعددة (مثلاً ubuntu-latest و windows-latest)
+build:
+    flutter clean
+    flutter pub get
+    flutter build apk
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]  # يمكن تعديل الأنظمة التي تريد اختبارها هنا
-        include:
-          - os: ubuntu-latest
-            compiler: gcc
-          - os: windows-latest
-            compiler: mingw-w64  # أو أي مترجم آخر مثل MSVC إذا كنت تستخدمه
+clean:
+    flutter clean
 
-    steps:
-    - uses: actions/checkout@v4  # تنزيل الكود من المستودع
-
-    - name: Install dependencies
-      run: |
-        if [ ${{ matrix.os }} == 'ubuntu-latest' ]; then
-          sudo apt-get update && sudo apt-get install -y build-essential  # تثبيت الأدوات مثل gcc و make على Linux
-        elif [ ${{ matrix.os }} == 'windows-latest' ]; then
-          choco install mingw  # تثبيت MinGW على Windows (يمكنك استخدام MSVC أو مترجم آخر حسب الحاجة)
-        fi
-
-    - name: Build project using Makefile
-      run: make  # استخدام Makefile لبناء المشروع
-
-    - name: Run tests
-      run: make check  # إذا كان لديك خطوة لاختبار المشروع في Makefile
-
-    - name: Clean up
-      run: make clean  # لتنظيف الملفات بعد البناء
+test:
+    flutter test
