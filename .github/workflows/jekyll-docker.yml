@@ -1,14 +1,15 @@
-name: Jekyll Site CI with Docker
+name: Build and Deploy Flutter
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -16,32 +17,23 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 2. التأكد من تثبيت Docker
-    - name: Set up Docker
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-        sudo apt-get update
-        sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+    # 2. إعداد Flutter
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.7.0'  # النسخة المناسبة لك
 
-    # 3. بناء الموقع باستخدام Docker
-    - name: Build the Jekyll site with Docker
-      run: |
-        docker run \
-          -v ${{ github.workspace }}:/srv/jekyll \
-          -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-          jekyll/builder:4.2.0 \
-          /bin/bash -c "jekyll build --future"
+    # 3. تثبيت التبعيات
+    - name: Install dependencies
+      run: flutter pub get
 
-    # 4. التحقق من نجاح البناء
-    - name: Verify Build Success
-      run: test -d _site
+    # 4. بناء المشروع
+    - name: Build project
+      run: flutter build apk
 
-    # 5. رفع الملفات الناتجة
-    - name: Upload Built Site
+    # 5. رفع الملفات الناتجة (مثال للـ APK)
+    - name: Upload Built APK
       uses: actions/upload-artifact@v3
       with:
-        name: jekyll-site
-        path: _site/
+        name: flutter-apk
+        path: build/app/outputs/flutter-apk/app-release.apk
