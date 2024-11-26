@@ -1,0 +1,5 @@
+- name: Install dependencies
+  run: |
+    cd path/to/your/flutter/project  # التأكد من أنك في المجلد الصحيح
+    flutter clean
+    flutter pub get
