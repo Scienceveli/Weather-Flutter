@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. تنزيل الكود
+    # 1. تنزيل الكود من مستودع GitHub
     - name: Checkout Repository
       uses: actions/checkout@v4
 
@@ -21,19 +21,23 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.7.0'
+        flutter-version: '3.7.0'  # تأكد من أنك تستخدم الإصدار الذي تحتاجه
 
-    # 3. تثبيت التبعيات
+    # 3. تحديث Flutter (اختياري)
+    - name: Upgrade Flutter
+      run: flutter upgrade
+
+    # 4. تثبيت التبعيات
     - name: Install dependencies
       run: flutter pub get
 
-    # 4. بناء المشروع
+    # 5. بناء المشروع (تأكد من أنك في المجلد الصحيح)
     - name: Build project
-      run: flutter build apk
+      run: flutter build apk --release
 
-    # 5. رفع الملفات الناتجة باستخدام الإصدار الصحيح (v3)
+    # 6. رفع الملفات الناتجة (APK)
     - name: Upload Built APK
       uses: actions/upload-artifact@v3
       with:
         name: flutter-apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        path: build/app/outputs/flutter-apk/app-release.apk  # تأكد من المسار هنا
