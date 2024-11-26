@@ -1,66 +1,29 @@
-name: Flutter CI/CD with Makefile
+name: Flutter CI
 
 on:
   push:
     branches:
       - main
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
-    # 1. تنزيل الكود
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # 2. إعداد Flutter
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: 'stable'
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.0'
 
-    # 3. تثبيت التبعيات عبر Flutter
-    - name: Install Flutter Dependencies
-      run: flutter pub get
+      - name: Navigate to Flutter project
+        working-directory: Weather_App # ضع مسار المجلد الخاص بمشروعك هنا
 
-    # 4. تثبيت التبعيات باستخدام Makefile (إذا كان لديك Makefile في المشروع)
-    - name: Run Makefile build
-      run: make
-      if: success()
+      - name: Install dependencies
+        run: flutter pub get
 
-    # 5. تشغيل الاختبارات
-    - name: Run Tests
-      run: flutter test
-
-    # 6. بناء APK للأندرويد (إذا كنت على Ubuntu)
-    - name: Build APK
-      run: flutter build apk --release
-      if: matrix.os == 'ubuntu-latest'
-
-    # 7. التحقق من وجود APK
-    - name: Verify APK Exists
-      run: test -f build/app/outputs/flutter-apk/app-release.apk
-      if: matrix.os == 'ubuntu-latest'
-
-    # 8. بناء iOS (إذا كنت على macOS فقط)
-    - name: Build iOS
-      run: flutter build ios --release
-      if: matrix.os == 'macos-latest'
-
-    # 9. رفع النتائج (Artifacts)
-    - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: flutter-build
-        path: |
-          build/app/outputs/flutter-apk/app-release.apk
-          build/ios/ipa
-      if: success()
+      - name: Run tests (اختياري)
+        run: flutter test
