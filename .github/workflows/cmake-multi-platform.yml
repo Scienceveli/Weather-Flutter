@@ -1,16 +1,9 @@
-- name: Upload Built APK
-  uses: actions/upload-artifact@v3
-  with:
-    name: flutter-apk
-    path: build/app/outputs/flutter-apk/app-release.apk
-# Makefile لبناء مشروع Flutter
-
 .PHONY: build clean test
 
 build:
     flutter clean
     flutter pub get
-    flutter build apk
+    flutter build apk --release
 
 clean:
     flutter clean
