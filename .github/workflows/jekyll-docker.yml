@@ -21,23 +21,32 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.7.0'  # تأكد من أنك تستخدم الإصدار الذي تحتاجه
+        flutter-version: '3.7.0'
 
-    # 3. تحديث Flutter (اختياري)
-    - name: Upgrade Flutter
-      run: flutter upgrade
+    # 3. إعداد Android SDK
+    - name: Set up Android SDK
+      run: |
+        sudo apt update
+        sudo apt install -y android-sdk
+        export ANDROID_HOME=/usr/lib/android-sdk
+        export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 
-    # 4. تثبيت التبعيات
+    # 4. تثبيت الأدوات المفقودة (ninja و GTK)
+    - name: Install ninja and GTK 3.0 libraries
+      run: |
+        sudo apt-get install -y ninja-build libgtk-3-dev
+
+    # 5. تثبيت التبعيات
     - name: Install dependencies
       run: flutter pub get
 
-    # 5. بناء المشروع (تأكد من أنك في المجلد الصحيح)
+    # 6. بناء المشروع (تأكد من أنك في المجلد الصحيح)
     - name: Build project
       run: flutter build apk --release
 
-    # 6. رفع الملفات الناتجة (APK)
+    # 7. رفع الملفات الناتجة (APK)
     - name: Upload Built APK
       uses: actions/upload-artifact@v3
       with:
         name: flutter-apk
-        path: build/app/outputs/flutter-apk/app-release.apk  # تأكد من المسار هنا
+        path: build/app/outputs/flutter-apk/app-release.apk
