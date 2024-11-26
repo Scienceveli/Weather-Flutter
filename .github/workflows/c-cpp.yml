@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]  # تشغيل الـ workflow عند دفع التعديلات إلى الفرع الرئيسي
   pull_request:
-    branches: [ "main" ]  # تشغيل الـ workflow عند فتح pull request إلى الفرع الرئيسي
+    branches: [ "main" ]  
 
 jobs:
   build:
