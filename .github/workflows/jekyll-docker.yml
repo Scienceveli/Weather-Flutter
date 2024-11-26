@@ -27,19 +27,11 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
 
-    # 4. تنظيف المشروع (اختياري)
-    - name: Clean Flutter project
-      run: flutter clean
-
-    # 5. بناء المشروع
+    # 4. بناء المشروع
     - name: Build project
       run: flutter build apk
 
-    # 6. التحقق من وجود الملف الناتج (اختياري)
-    - name: Verify APK build
-      run: test -f build/app/outputs/flutter-apk/app-release.apk
-
-    # 7. رفع الملفات الناتجة (مثال للـ APK)
+    # 5. رفع الملفات الناتجة باستخدام الإصدار الصحيح (v3)
     - name: Upload Built APK
       uses: actions/upload-artifact@v3
       with:
