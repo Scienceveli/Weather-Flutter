@@ -1,0 +1,29 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest  # أو أي نظام تشغيل تستخدمه في بيئة GitHub Actions
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.0'  # حدد إصدار Flutter الذي تحتاجه
+
+      - name: Install dependencies
+        run: |
+          cd $GITHUB_WORKSPACE/Weather_App  # الانتقال إلى المسار الصحيح
+          flutter clean
+          flutter pub get
+
+      - name: Run Flutter build
+        run: |
+          cd $GITHUB_WORKSPACE/Weather_App  # تأكد من الانتقال للمجلد الصحيح
+          flutter build apk  # أو أي أمر آخر بناءً على احتياجاتك
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: flutter-build
+          path: build/
+
